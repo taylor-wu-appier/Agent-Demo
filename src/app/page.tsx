@@ -36,10 +36,17 @@ type FrontendStateData = {
   }[];
 };
 
+type MouseEvent ={
+  checkedState: string | null;
+  hoveredState: string | null;
+  clickedState: string | null;
+}
+
 type FrontendConfig = {
   system_prompt: string;
   field_schemas: Record<string, FieldMetadata>;
   frontendState: FrontendStateData;
+  mouseEvent: MouseEvent;
 };
 
 type RootAgentState = {
@@ -266,6 +273,19 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
   const proverbs = state.agent_config?.frontendState?.proverbs || [];
   const weather = state.agent_config?.frontendState?.weather || [];
 
+  const updateUserMouseEvent = (type: "click" | "hover" | "check", value: string | null) => {
+    setState({
+      ...state,
+      agent_config: {
+        ...(state.agent_config || {}),
+        mouseEvent: {
+          ...(state.agent_config?.mouseEvent || {}),
+          [type === "click" ? "clickedState" : type === "hover" ? "hoveredState" : "checkedState"]: value
+        }
+      }
+    });
+  };
+
   //🪁 Generative UI: 這裡沒有變，因為後端的 get_weather 工具介面沒變
   useRenderToolCall(
     {
@@ -299,6 +319,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         <ProverbsCard 
             // 這裡傳入解構後的數據
             proverbs={proverbs} 
+            updateUserMouseEvent={updateUserMouseEvent}
             // 如果 ProverbsCard 內部會呼叫 setState，你需要封裝一下
             onUpdateProverbs={(newProverbs) => {
                 setState({

@@ -3,9 +3,10 @@ import { useState } from "react";
 export interface ProverbsCardProps {
   proverbs: string[];
   onUpdateProverbs: (proverbs: string[]) => void;
+  updateUserMouseEvent?: (type: "click" | "hover" | "check", value: string | null) => void;
 }
 
-export function ProverbsCard({ proverbs, onUpdateProverbs }: ProverbsCardProps) {
+export function ProverbsCard({ proverbs, onUpdateProverbs, updateUserMouseEvent }: ProverbsCardProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
   const [newProverb, setNewProverb] = useState("");
@@ -38,6 +39,8 @@ export function ProverbsCard({ proverbs, onUpdateProverbs }: ProverbsCardProps) 
     onUpdateProverbs(proverbs.filter((_, i) => i !== index));
   };
 
+  const parentFieldName = 'proverbs'
+
   return (
     <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-2xl w-full">
       <h1 className="text-4xl font-bold text-white mb-2 text-center">Proverbs</h1>
@@ -49,6 +52,9 @@ export function ProverbsCard({ proverbs, onUpdateProverbs }: ProverbsCardProps) 
           <div 
             key={index} 
             className="bg-white/15 p-4 rounded-xl text-white relative group hover:bg-white/20 transition-all"
+            onClick={() => updateUserMouseEvent?.('click', `${parentFieldName}[${index}]`)}
+            onMouseEnter={() => updateUserMouseEvent?.('hover', `${parentFieldName}[${index}]`)}
+            onMouseLeave={() => updateUserMouseEvent?.('hover', null)}
           >
             {editingIndex === index ? (
               <div className="flex gap-2">
