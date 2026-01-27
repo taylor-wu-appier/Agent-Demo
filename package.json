@@ -6,7 +6,9 @@
     "dev": "concurrently \"npm run dev:ui\" \"npm run dev:agent\" --names ui,agent --prefix-colors blue,green --kill-others",
     "dev:debug": "LOG_LEVEL=debug npm run dev",
     "dev:agent": "./scripts/run-agent.sh || scripts/run-agent.bat",
-    "dev:ui": "next dev --turbopack",
+    "dev:ui": "concurrently \"next dev --turbopack\" \"tsx server.ts\" --names next,server --prefix-colors cyan,magenta",
+    "dev:test": "next dev --turbopack",
+    "dev:server": "tsx server.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -18,13 +20,20 @@
     "@copilotkit/react-core": "1.50.1",
     "@copilotkit/react-ui": "1.50.1",
     "@copilotkit/runtime": "1.50.1",
+    "@copilotkitnext/agent": "^1.51.2",
+    "@copilotkitnext/react": "^1.51.2",
+    "@copilotkitnext/runtime": "^1.51.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "next": "16.1.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "shiki": "^3.19.0"
+    "shiki": "^3.19.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/express": "^5.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -32,6 +41,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
