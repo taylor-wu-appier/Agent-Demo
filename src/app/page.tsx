@@ -9,8 +9,12 @@ import {
   useFrontendTool,
   useRenderToolCall,
 } from "@copilotkit/react-core";
-import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
-import { useState, useEffect, useRef } from "react";
+import { CopilotSidebar } from "../framework/components/chat";
+import { useState, useEffect, useRef, CSSProperties } from "react";
+
+type CopilotKitCSSProperties = CSSProperties & {
+  "--copilot-kit-primary-color"?: string;
+};
 
 type FieldMetadata = {
   field_name: string;
@@ -77,18 +81,16 @@ export default function CopilotKitPage() {
       }
     >
       <CopilotSidebar
-        disableSystemMessage={true}
-        clickOutsideToClose={false}
         defaultOpen={true}
         labels={{
-          title: "Dynamic Agent",
-          initial: "👋 Hello! I am configured by your frontend state.",
+          modalHeaderTitle: "Dynamic Agent",
+          // initial: "👋 Hello! I am configured by your frontend state.", // 'initial' is not a valid label
         }}
-        suggestions={[
-            // ... suggestions 可以保持不變
-            { title: "Add Proverb", message: "Add a proverb about coding." },
-            { title: "Check Weather", message: "What's the weather in Tokyo?" }
-        ]}
+        // suggestions={[
+        //     // ... suggestions 可以保持不變
+        //     { title: "Add Proverb", message: "Add a proverb about coding." },
+        //     { title: "Check Weather", message: "What's the weather in Tokyo?" }
+        // ]}
       >
         <YourMainContent themeColor={themeColor} />
       </CopilotSidebar>
