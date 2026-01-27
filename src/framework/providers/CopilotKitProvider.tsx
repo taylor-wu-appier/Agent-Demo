@@ -373,7 +373,7 @@ export const useCopilotKit = (): CopilotKitContextValue => {
   const context = useContext(CopilotKitContext);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  if (!context) {
+  if (!context || !context.copilotkit) {
     throw new Error("useCopilotKit must be used within CopilotKitProvider");
   }
   useEffect(() => {

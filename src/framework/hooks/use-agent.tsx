@@ -63,7 +63,6 @@ export function useAgent({ agentId, updates }: UseAgentProps = {}) {
     // After runtime has synced (Connected or Error) or no runtime configured and the agent doesn't exist, throw a descriptive error
     const knownAgents = Object.keys(copilotkit.agents ?? {});
     const runtimePart = isRuntimeConfigured ? `runtimeUrl=${copilotkit.runtimeUrl}` : "no runtimeUrl";
-    console.log('useAgent', agentId, runtimePart, knownAgents)
     throw new Error(
       `useAgent: Agent '${agentId}' not found after runtime sync (${runtimePart}). ` +
         (knownAgents.length ? `Known agents: [${knownAgents.join(", ")}]` : "No agents registered.") +
