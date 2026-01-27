@@ -9,7 +9,8 @@ import {
   useFrontendTool,
   useRenderToolCall,
 } from "@copilotkit/react-core";
-import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
+import { CopilotKitCSSProperties } from "@copilotkit/react-ui";
+import { CopilotSidebar } from "@/framework";
 import { useState, useEffect, useRef } from "react";
 
 type FieldMetadata = {
