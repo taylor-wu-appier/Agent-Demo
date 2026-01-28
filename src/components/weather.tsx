@@ -9,45 +9,112 @@ function SunIcon() {
   );
 }
 
-// Weather card component where the location and themeColor are based on what the agent
-// sets via tool calls.
-export function WeatherCard({ location, themeColor }: { location?: string, themeColor: string }) {
+function CloudIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-gray-200">
+      <path d="M17 19h-6c-2.76 0-5-2.24-5-5 0-2.64 2.05-4.78 4.65-4.96A5.49 5.49 0 0 1 15 5c2.7 0 4.95 1.94 5.38 4.51A4 4 0 0 1 17 19z" />
+    </svg>
+  );
+}
+
+function RainIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-blue-200">
+      <path d="M17 19h-6c-2.76 0-5-2.24-5-5 0-2.64 2.05-4.78 4.65-4.96A5.49 5.49 0 0 1 15 5c2.7 0 4.95 1.94 5.38 4.51A4 4 0 0 1 17 19z" />
+      <path d="M10 20v2M14 20v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+interface WeatherData {
+  location: string;
+  temperature: number;
+  condition: string;
+}
+
+const getConditionStyles = (condition: string) => {
+  const lower = condition.toLowerCase();
+  if (lower.includes('sunny') || lower.includes('clear')) {
+    return {
+      bg: 'bg-gradient-to-br from-amber-400 to-orange-500',
+      icon: <SunIcon />
+    };
+  }
+  if (lower.includes('cloud') || lower.includes('overcast')) {
+    return {
+      bg: 'bg-gradient-to-br from-slate-400 to-slate-600',
+      icon: <CloudIcon />
+    };
+  }
+  if (lower.includes('rain') || lower.includes('drizzle') || lower.includes('storm')) {
+    return {
+      bg: 'bg-gradient-to-br from-blue-500 to-indigo-600',
+      icon: <RainIcon />
+    };
+  }
+  if (lower.includes('snow')) {
+    return {
+      bg: 'bg-gradient-to-br from-blue-100 to-blue-300',
+      icon: <CloudIcon />
+    };
+  }
+  // Default
+  return {
+    bg: 'bg-gradient-to-br from-blue-500 to-purple-600',
+    icon: <SunIcon />
+  };
+};
+
+// Weather card component
+export function WeatherCard({ data, themeColor }: { data: WeatherData, themeColor?: string }) {
+  const style = getConditionStyles(data.condition);
+  
+  // If themeColor is explicitly provided (and not undefined), use it as a style override
+  // Otherwise use the class based gradient
+  const containerStyle = themeColor ? { backgroundColor: themeColor } : undefined;
+  const containerClass = themeColor 
+    ? "rounded-2xl shadow-lg overflow-hidden relative group transition-transform hover:scale-[1.02]" 
+    : `rounded-2xl shadow-lg overflow-hidden relative group transition-transform hover:scale-[1.02] ${style.bg}`;
+
   return (
     <div
-    style={{ backgroundColor: themeColor }}
-    className="rounded-xl shadow-xl mt-6 mb-4 max-w-md w-full"
-  >
-    <div className="bg-white/20 p-4 w-full">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-xl font-bold text-white capitalize">{location}</h3>
-          <p className="text-white">Current Weather</p>
+      style={containerStyle}
+      className={containerClass}
+    >
+      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      <div className="p-6 relative z-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-2xl font-bold text-white capitalize drop-shadow-sm">{data.location}</h3>
+            <p className="text-white/80 text-sm font-medium tracking-wide uppercase">Current Weather</p>
+          </div>
+          <div className="drop-shadow-md transform transition-transform group-hover:rotate-12 duration-500">
+             {style.icon}
+          </div>
         </div>
-        <SunIcon />
-      </div>
-      
-      <div className="mt-4 flex items-end justify-between">
-        <div className="text-3xl font-bold text-white">70°</div>
-        <div className="text-sm text-white">Clear skies</div>
-      </div>
-      
-      <div className="mt-4 pt-4 border-t border-white">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div>
-            <p className="text-white text-xs">Humidity</p>
-            <p className="text-white font-medium">45%</p>
-          </div>
-          <div>
-            <p className="text-white text-xs">Wind</p>
-            <p className="text-white font-medium">5 mph</p>
-          </div>
-          <div>
-            <p className="text-white text-xs">Feels Like</p>
-            <p className="text-white font-medium">72°</p>
+        
+        <div className="mt-6 flex items-end justify-between">
+          <div className="text-5xl font-bold text-white drop-shadow-md">{data.temperature}°</div>
+          <div className="text-lg text-white/90 font-medium">{data.condition}</div>
+        </div>
+        
+        <div className="mt-6 pt-4 border-t border-white/20">
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <p className="text-white/70 text-xs uppercase tracking-wider">Humidity</p>
+              <p className="text-white font-semibold">45%</p>
+            </div>
+            <div>
+              <p className="text-white/70 text-xs uppercase tracking-wider">Wind</p>
+              <p className="text-white font-semibold">5 mph</p>
+            </div>
+            <div>
+              <p className="text-white/70 text-xs uppercase tracking-wider">Feels Like</p>
+              <p className="text-white font-semibold">{data.temperature + 2}°</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   );
 }
